@@ -26,7 +26,7 @@ This script installs RHACM operator on your cluster, enabling centralized manage
 
 Access the OpenShift console and navigate to **Installed Operators > Advanced Cluster Management for Kubernetes**. Here, you should see the MultiClusterHub resource with its status displayed as **Running**.
 
-![MultiClusterHub Status](99-assets/multiclusterhubs.png)
+![MultiClusterHub Status](99-assets/multiclusterhubs.png){ style="border: 1px solid gray;" }
 
 ## Configuring Policies
 
