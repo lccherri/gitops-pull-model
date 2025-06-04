@@ -1,38 +1,43 @@
 # RHACM + OpenShift GitOps Pull Model
 
-GitOps Pull Model is a deployment strategy where application configurations are centrally managed on the ACM Hub Cluster. Managed clusters autonomously pull these configurations directly from the Git repository, ensuring decentralized control.
+GitOps Pull Model is a deployment strategy where application configurations are centrally managed on the ACM Hub Cluster. Managed clusters independently pull these configurations directly from a Git repository, ensuring decentralized control and streamlined operations.
 
-This model enhances scalability, reliability, and resilience by eliminating single points of failure and distributing workloads across managed clusters.
+This approach improves scalability, reliability, and resilience by eliminating single points of failure and distributing workloads across managed clusters.
 
 This demonstration provides all the necessary resources to implement the GitOps Pull Model effectively.
 
 ## Prerequisites
 
-Ensure the following requirements are met before proceeding:
+Before you begin, ensure the following requirements are met:
 
 1. OpenShift Container Platform version 4.16 or later.
 2. Red Hat Advanced Cluster Management for Kubernetes (RHACM) version 2.13 or later.
 
 ## Installing RHACM
 
-To install RHACM, run the following command:
+To install RHACM, execute the following command:
 
 ```bash
-# Execute the ACM installation script
+# Run the ACM installation script
 sh ./00-rhacm/acm-install.sh
 ```
 
-This script sets up RHACM on your cluster, enabling centralized management and GitOps functionality.
+This script installs RHACM on your cluster, enabling centralized management and GitOps capabilities.
 
 ## Configuring Policies
 
-Once RHACM is installed, apply the necessary policies to configure the GitOps environment:
+After installing RHACM, apply the required policies to set up the GitOps environment:
 
 ```bash
 oc create namespace policies
 oc apply -f ./00-rhacm/02-policies -n policies
 ```
 
+## Configuring Applications
+
+With OpenShift GitOps configured on both the Hub Cluster and managed clusters, create the ApplicationSet to distribute workloads across managed clusters.
+
+Apply this configuration on the RHACM Hub Cluster:
 
 ```bash
 oc apply -f ./01-gitops/00-applications -n gitops-hub
