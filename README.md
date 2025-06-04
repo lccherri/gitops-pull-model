@@ -47,6 +47,10 @@ The policies rely on the following tags to configure the GitOps environment effe
 - **gitops-hub**: Configures an ArgoCD instance in the tagged cluster within the namespace `gitops-hub`. This tag should be applied to the Hub Cluster.
 - **gitops-managed**: Configures an ArgoCD instance in the tagged cluster within the namespace `gitops-managed`. This tag should be applied to the Managed Clusters.
 
+After applying the tags to each cluster as described above, within a few minutes, the clusters should become compliant with the defined policies. You can verify the compliance status by navigating to **Governance > Policies** in the RHACM console. Ensure all policies display a status of **Compliant** for the respective clusters.
+
+![Policies Compliance Status](99-assets/policies.png)
+
 ## Configuring Applications
 
 With OpenShift GitOps configured on both the Hub Cluster and managed clusters, create the ApplicationSet to distribute workloads across managed clusters.
