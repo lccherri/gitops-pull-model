@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: petclinic-allclusters-app-set
+  namespace: gitops-hub
+spec:
+  generators:
+  - clusterDecisionResource:
+      configMapRef: acm-placement
+      labelSelector:
+        matchLabels:
+          cluster.open-cluster-management.io/placement: petclinic-placement
+      requeueAfterSeconds: 30
+  template:
+    metadata:
+      annotations:
+        # Managed Cluster and namespace where the application will be deployed
+        apps.open-cluster-management.io/ocm-managed-cluster: '{{name}}'
+        apps.open-cluster-management.io/ocm-managed-cluster-app-namespace: gitops-managed
+        # Skip reconciliation of the application in the HUB Cluster
+        argocd.argoproj.io/skip-reconcile: "true"
+      labels:
+        apps.open-cluster-management.io/pull-to-ocm-managed-cluster: "true"
+      name: '{{name}}-petclinic-app'
+    spec:
+      destination:
+        namespace: petclinic
+        server: https://kubernetes.default.svc
+      project: default
+      source:
+        path: 02-sample/petclinic
+        repoURL: https://github.com/lccherri/gitops-pull-model.git
+      syncPolicy:
+        automated: {}
+        syncOptions:
+        - CreateNamespace=true

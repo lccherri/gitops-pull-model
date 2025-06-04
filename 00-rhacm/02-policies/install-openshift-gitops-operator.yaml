@@ -1,0 +1,86 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: install-openshift-gitops-operator
+  annotations:
+    policy.open-cluster-management.io/categories: SC System and Communications Protection
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/controls: SC-6 Resource Availability
+    policy.open-cluster-management.io/description: Provides the OpenShift GitOps Operator.
+spec:
+  disabled: false
+  copyPolicyMetadata: false
+  remediationAction: enforce
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: musthave-namespace-openshift-gitops-operator
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  name: openshift-gitops-operator
+                  labels:
+                    openshift.io/cluster-monitoring: "true"  
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1beta1
+        kind: OperatorPolicy
+        metadata:
+          name: musthave-operator-openshift-gitops
+        spec:
+          dependencies:
+            - name: musthave-namespace-openshift-gitops-operator
+              namespace: policies
+          complianceType: musthave
+          remediationAction: inform
+          severity: critical
+          subscription:
+            name: openshift-gitops-operator
+            namespace: openshift-gitops-operator
+            channel: latest
+            source: redhat-operators
+            sourceNamespace: openshift-marketplace
+            config:
+              env:
+                - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+                  value: gitops-managed, gitops-hub
+                - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+                  value: 'true'
+          upgradeApproval: None
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: install-openshift-gitops-operator-placement
+spec:
+  tolerations:
+    - key: cluster.open-cluster-management.io/unreachable
+      operator: Exists
+    - key: cluster.open-cluster-management.io/unavailable
+      operator: Exists
+  predicates:
+    - requiredClusterSelector:
+        labelSelector:
+          matchExpressions:
+            - key: gitops-operator
+              operator: Exists
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: install-openshift-gitops-operator-placementbinding
+placementRef:
+  name: install-openshift-gitops-operator-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: install-openshift-gitops-operator
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
