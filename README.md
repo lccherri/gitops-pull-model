@@ -4,6 +4,8 @@ GitOps Pull Model is a deployment strategy where application configurations are 
 
 This approach improves scalability, reliability, and resilience by eliminating single points of failure and distributing workloads across managed clusters.
 
+![GitOps Pull Model Diagram](99-assets/diagram.png)
+
 This demonstration provides all the necessary resources to implement the GitOps Pull Model effectively.
 
 ## Prerequisites
@@ -26,7 +28,7 @@ This script installs RHACM operator on your cluster, enabling centralized manage
 
 Access the OpenShift console and navigate to **Installed Operators > Advanced Cluster Management for Kubernetes**. Here, you should see the MultiClusterHub resource with its status displayed as **Running**.
 
-![MultiClusterHub Status](99-assets/multiclusterhubs.png){ style="border: 1px solid gray;" }
+![MultiClusterHub Status](99-assets/multiclusterhubs.png)
 
 ## Configuring Policies
 
@@ -37,6 +39,14 @@ oc create namespace policies
 oc apply -f ./00-rhacm/02-policies -n policies
 ```
 
+### Policy Tags Overview
+
+The policies rely on the following tags to configure the GitOps environment effectively:
+
+- **gitops-operator**: Installs the OpenShift GitOps operator on the tagged clusters. This tag should be applied to all clusters.
+- **gitops-hub**: Configures an ArgoCD instance in the tagged cluster within the namespace `gitops-hub`. This tag should be applied to the Hub Cluster.
+- **gitops-managed**: Configures an ArgoCD instance in the tagged cluster within the namespace `gitops-managed`. This tag should be applied to the Managed Clusters.
+
 ## Configuring Applications
 
 With OpenShift GitOps configured on both the Hub Cluster and managed clusters, create the ApplicationSet to distribute workloads across managed clusters.
@@ -46,3 +56,9 @@ Apply this configuration on the RHACM Hub Cluster:
 ```bash
 oc apply -f ./01-gitops/00-applications -n gitops-hub
 ```
+
+## Reference
+
+* [RHACM - Installation](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/install/index)
+* [RHACM - Importing a cluster](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/clusters/index#importing-cluster)
+* [RHACM - GiOps](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/gitops/index)
