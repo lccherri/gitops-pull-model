@@ -63,29 +63,31 @@ To access the ArgoCD instances, click the link and log in using your OpenShift c
 
 ## Configuring Applications
 
-With OpenShift GitOps configured on both the Hub Cluster and managed clusters, create the ApplicationSet to distribute workloads across managed clusters.
+With OpenShift GitOps configured on both the Hub Cluster and Managed Clusters, you can now create an ApplicationSet to distribute workloads across the Managed Clusters.
 
-Apply this configuration on the RHACM Hub Cluster:
+### Applying the ApplicationSet Configuration
+
+To deploy the ApplicationSet, execute the following command on the RHACM Hub Cluster:
 
 ```bash
 oc apply -f ./01-gitops/00-applications -n gitops-hub
 ```
 
-### Checking the ArgoCD at the HUB Cluster
+### Verifying Applications on the Hub Cluster
 
-The ArgoCD at the HUB Cluster must show the application without further details:
+After applying the configuration, the ArgoCD instance on the Hub Cluster should display the application. However, detailed resource information will not be visible at this level:
 
-For more details, query the __MultiClusterApplicationSetReports__ generated for this application:
+![ArgoCD Hub Cluster Overview](99-assets/argocd-hub.png)
+
+For detailed insights, query the `MultiClusterApplicationSetReports` generated for the application using the following command:
 
 ```bash
 oc get multiclusterapplicationsetreports -n gitops-hub petclinic-allclusters-app-set
 ```
 
-![ArgoCD Managed Cluster Resources](99-assets/argocd-hub.png)
+### Verifying Applications on the Managed Clusters
 
-### Checking the ArgoCD at the Managed Cluster
-
-The ArgoCD at the Managed Cluster must show all the resources applied localy:
+On the Managed Clusters, the ArgoCD instance will display all resources applied locally, providing a comprehensive view of the deployed workloads:
 
 ![ArgoCD Managed Cluster Resources](99-assets/argocd-managed.png)
 
