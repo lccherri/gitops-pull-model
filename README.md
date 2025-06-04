@@ -1,4 +1,4 @@
-# RHACM + OpenShift GitOps Pull Model
+# OpenShift GitOps - Pull Model
 
 GitOps Pull Model is a deployment strategy where application configurations are centrally managed on the ACM Hub Cluster. Managed clusters independently pull these configurations directly from a Git repository, ensuring decentralized control and streamlined operations.
 
@@ -39,17 +39,27 @@ oc create namespace policies
 oc apply -f ./00-rhacm/02-policies -n policies
 ```
 
-### Policy Tags Overview
+### Policy Labels Overview
 
-The policies rely on the following tags to configure the GitOps environment effectively:
+The policies rely on the following labels to configure the GitOps environment effectively:
 
-- **gitops-operator**: Installs the OpenShift GitOps operator on the tagged clusters. This tag should be applied to all clusters.
-- **gitops-hub**: Configures an ArgoCD instance in the tagged cluster within the namespace `gitops-hub`. This tag should be applied to the Hub Cluster.
-- **gitops-managed**: Configures an ArgoCD instance in the tagged cluster within the namespace `gitops-managed`. This tag should be applied to the Managed Clusters.
+- **gitops-operator**: Installs the OpenShift GitOps operator on the labeled clusters. This label should be applied to all clusters.
+- **gitops-hub**: Configures an ArgoCD instance in the labeled cluster within the namespace `gitops-hub`. This label should be applied to the Hub Cluster.
+- **gitops-managed**: Configures an ArgoCD instance in the labeled cluster within the namespace `gitops-managed`. This label should be applied to the Managed Clusters.
 
 After applying the tags to each cluster as described above, within a few minutes, the clusters should become compliant with the defined policies. You can verify the compliance status by navigating to **Governance > Policies** in the RHACM console. Ensure all policies display a status of **Compliant** for the respective clusters.
 
 ![Policies Compliance Status](99-assets/policies.png)
+
+## Accessing ArgoCD
+
+Once the policies are applied, an application link is automatically created in the **Applications** menu of the OpenShift clusters.
+
+![ArgoCD Console Link](99-assets/console-link.png)
+
+On the Managed Clusters, the link is labeled **OpenShift GitOps - Managed**.
+
+To access the ArgoCD instances, click the link and log in using your OpenShift credentials by selecting the **Log In Via OpenShift** option.
 
 ## Configuring Applications
 
@@ -61,8 +71,28 @@ Apply this configuration on the RHACM Hub Cluster:
 oc apply -f ./01-gitops/00-applications -n gitops-hub
 ```
 
+### Checking the ArgoCD at the HUB Cluster
+
+The ArgoCD at the HUB Cluster must show the application without further details:
+
+For more details, query the __MultiClusterApplicationSetReports__ generated for this application:
+
+```bash
+oc get multiclusterapplicationsetreports -n gitops-hub petclinic-allclusters-app-set
+```
+
+![ArgoCD Managed Cluster Resources](99-assets/argocd-hub.png)
+
+### Checking the ArgoCD at the Managed Cluster
+
+The ArgoCD at the Managed Cluster must show all the resources applied localy:
+
+![ArgoCD Managed Cluster Resources](99-assets/argocd-managed.png)
+
 ## Reference
 
-* [RHACM - Installation](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/install/index)
-* [RHACM - Importing a cluster](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/clusters/index#importing-cluster)
-* [RHACM - GiOps](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/gitops/index)
+For additional information and detailed guidance, refer to the official documentation:
+
+- [RHACM Installation Guide](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/install/index): Step-by-step instructions for installing RHACM on your OpenShift cluster.
+- [Importing Clusters with RHACM](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/clusters/index#importing-cluster): Learn how to import and manage clusters using RHACM.
+- [GitOps with RHACM](https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.13/html-single/gitops/index): Explore GitOps capabilities and best practices for managing applications across clusters.
