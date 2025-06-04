@@ -30,6 +30,20 @@ Access the OpenShift console and navigate to **Installed Operators > Advanced Cl
 
 ![MultiClusterHub Status](99-assets/multiclusterhubs.png)
 
+## Configuring Groups and Permissions
+
+If you are not using the `kubeadmin` user, you need to create a `gitops-admin` group and add your current user to it to ensure administrative access to the ArgoCD instances provisioned on each OpenShift cluster. Execute the following commands:
+
+```bash
+# Create a new group named gitops-admin
+oc adm groups new gitops-admin
+
+# Add the logged-in user to the gitops-admin group
+oc adm groups add-users gitops-admin $(oc whoami)
+```
+
+Repeat these steps on every OpenShift cluster where ArgoCD instances will be deployed.
+
 ## Configuring Policies
 
 After installing RHACM, apply the required policies to set up the GitOps environment:
