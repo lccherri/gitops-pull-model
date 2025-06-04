@@ -24,9 +24,9 @@ sh ./00-rhacm/acm-install.sh
 
 This script installs RHACM operator on your cluster, enabling centralized management and GitOps capabilities.
 
-Acessing the OpenShift console, at __"Installed Operators > Advanced Cluster Management for Kubernetes ", it should be possible to view the MultiClusterHub with the "Running" status:
+Access the OpenShift console and navigate to **Installed Operators > Advanced Cluster Management for Kubernetes**. Here, you should see the MultiClusterHub resource with its status displayed as **Running**.
 
-
+![MultiClusterHub Status](99-assets/multiclusterhubs.png)
 
 ## Configuring Policies
 
@@ -45,14 +45,4 @@ Apply this configuration on the RHACM Hub Cluster:
 
 ```bash
 oc apply -f ./01-gitops/00-applications -n gitops-hub
-```
-
-## Diagram
-
-```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
 ```
