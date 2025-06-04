@@ -30,5 +30,10 @@ Once RHACM is installed, apply the necessary policies to configure the GitOps en
 
 ```bash
 oc create namespace policies
-oc apply -f ./00-rhacm/02-policies
+oc apply -f ./00-rhacm/02-policies -n policies
+```
+
+
+```bash
+oc apply -f ./01-gitops/00-applications -n gitops-hub
 ```
