@@ -54,6 +54,14 @@ spec:
                   name: openshift-gitops
                   namespace: gitops-managed
                 spec:
+                  extraConfig:
+                    resource.customizations: |
+                      route.openshift.io/Route:
+                        health.lua: |
+                          hs = {}
+                          hs.status = "Healthy"
+                          hs.message = "Route is considered healthy"
+                          return hs
                   applicationSet:
                     resources:
                       limits:
