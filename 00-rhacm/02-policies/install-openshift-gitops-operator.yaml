@@ -39,9 +39,6 @@ spec:
         metadata:
           name: musthave-operator-openshift-gitops
         spec:
-          dependencies:
-            - name: musthave-namespace-openshift-gitops-operator
-              namespace: policies
           complianceType: musthave
           remediationAction: inform
           severity: critical

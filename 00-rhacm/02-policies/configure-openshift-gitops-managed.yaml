@@ -11,6 +11,12 @@ spec:
   disabled: false
   copyPolicyMetadata: false
   remediationAction: enforce
+  dependencies:
+    - apiVersion: policy.open-cluster-management.io/v1
+      kind: Policy
+      name: install-openshift-gitops-operator
+      namespace: policies
+      compliance: Compliant
   policy-templates:
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
@@ -37,11 +43,6 @@ spec:
         metadata:
           name: musthave-configuration-gitops-managed
         spec:
-          dependencies:
-            - name: musthave-operator-openshift-gitops
-              namespace: policies
-            - name: musthave-namespace-gitops-managed
-              namespace: policies
           remediationAction: inform
           severity: high
           object-templates:
@@ -213,15 +214,18 @@ spec:
                   apiGroup: rbac.authorization.k8s.io
                   kind: ClusterRole
                   name: cluster-admin
-    - objectDefinition:
+    - extraDependencies:
+      - apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        name: musthave-configuration-gitops-managed
+        namespace: ""
+        compliance: Compliant
+      objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
           name: musthave-configuration-gitops-managed-link
         spec:
-          dependencies:
-            - name: musthave-configuration-gitops-managed
-              namespace: policies
           remediationAction: inform
           severity: high
           object-templates:

@@ -11,6 +11,12 @@ spec:
   disabled: false
   copyPolicyMetadata: false
   remediationAction: enforce
+  dependencies:
+    - apiVersion: policy.open-cluster-management.io/v1
+      kind: Policy
+      name: install-openshift-gitops-operator
+      namespace: policies
+      compliance: Compliant
   policy-templates:
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
@@ -37,11 +43,6 @@ spec:
         metadata:
           name: musthave-configuration-gitops-hub
         spec:
-          dependencies:
-            - name: musthave-operator-openshift-gitops
-              namespace: policies
-            - name: musthave-namespace-gitops-hub
-              namespace: policies
           remediationAction: inform
           severity: high
           object-templates:
@@ -231,15 +232,18 @@ spec:
                     kind: Placement
                     apiVersion: cluster.open-cluster-management.io/v1beta1
                     name: gitops-placement
-    - objectDefinition:
+    - extraDependencies:
+      - apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        name: musthave-configuration-gitops-hub
+        namespace: ""
+        compliance: Compliant
+      objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
           name: musthave-configuration-gitops-hub-link
         spec:
-          dependencies:
-            - name: musthave-configuration-gitops-hub
-              namespace: policies
           remediationAction: inform
           severity: high
           object-templates:
