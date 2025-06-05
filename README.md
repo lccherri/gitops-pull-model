@@ -32,7 +32,7 @@ Access the OpenShift console and navigate to **Installed Operators > Advanced Cl
 
 ## Configuring Groups and Permissions
 
-If you are not using the `kubeadmin` user, you need to create a `gitops-admin` group and add your current user to it to ensure administrative access to the ArgoCD instances provisioned on each OpenShift cluster. Execute the following commands:
+**If you are not using the `kubeadmin` user**, you need to create a `gitops-admin` group and add your current user to it to ensure administrative access to the ArgoCD instances provisioned on each OpenShift cluster. Execute the following commands:
 
 ```bash
 # Create a new group named gitops-admin
@@ -46,12 +46,24 @@ Repeat these steps on every OpenShift cluster where ArgoCD instances will be dep
 
 ## Configuring Policies
 
-After installing RHACM, apply the required policies to set up the GitOps environment:
+Once RHACM is installed, the next step is to apply the necessary policies to configure the GitOps environment. These policies ensure that the clusters are set up correctly for GitOps operations.
+
+### Applying Policies
+
+Execute the following commands to create a namespace for the policies and apply them:
 
 ```bash
+# Create a namespace for policies
 oc create namespace policies
+
+# Apply the GitOps policies
 oc apply -f ./00-rhacm/02-policies -n policies
 ```
+
+- The `policies` namespace is used to organize and manage the GitOps-related policies.
+- The policy definitions in the `./00-rhacm/02-policies` directory include configurations for deploying the OpenShift GitOps operator and setting up ArgoCD instances on the clusters.
+
+For additional details, refer to the comments within the policy source files located in the `./00-rhacm/02-policies` directory.
 
 ### Policy Labels Overview
 

@@ -20,6 +20,8 @@ spec:
         spec:
           remediationAction: inform
           severity: high
+          # This is the Namespace for the GitOps Hub Cluster
+          # It is the Namespace that is created in the Hub Cluster
           object-templates:
             - complianceType: musthave
               objectDefinition:
@@ -44,6 +46,7 @@ spec:
           severity: high
           object-templates:
             # This is the GitOps Hub Instance
+            # It is the ArgoCD Instance that is created in the Hub Cluster
             - complianceType: musthave
               objectDefinition:
                 apiVersion: argoproj.io/v1beta1
@@ -185,6 +188,8 @@ spec:
                   tls:
                     ca: {}
             # This is the Managed Cluster Set Binding for the GitOps Hub Cluster
+            # It binds the GitOps Hub Cluster to the global Managed Cluster Set
+            # This is required for the GitOps Hub Cluster to be able to manage other clusters
             - complianceType: musthave
               objectDefinition:
                 apiVersion: cluster.open-cluster-management.io/v1beta2
@@ -195,6 +200,7 @@ spec:
                 spec:
                   clusterSet: global
             # This is the placement for the GitOps Hub Cluster
+            # This is required to define wich managed clusters should be discovered
             - complianceType: musthave
               objectDefinition:
                 apiVersion: cluster.open-cluster-management.io/v1beta1
@@ -208,7 +214,8 @@ spec:
                       operator: Exists
                     - key: cluster.open-cluster-management.io/unavailable
                       operator: Exists
-            # This is the GitOps Hub Cluster
+            # This is the GitOpsCluster
+            # It enables the GitOps Hub Cluster to manage other clusters using ACM
             - complianceType: musthave
               objectDefinition:
                 apiVersion: apps.open-cluster-management.io/v1beta1
@@ -237,6 +244,8 @@ spec:
           severity: high
           object-templates:
             # This is the OpenShift GitOps Instance Link
+            # It is the ConsoleLink that is created in the Hub Cluster
+            # It allows users to access the ArgoCD UI from the OpenShift Console
             - complianceType: musthave
               objectDefinition:
                 apiVersion: console.openshift.io/v1

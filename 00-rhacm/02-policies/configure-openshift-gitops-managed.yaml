@@ -21,6 +21,8 @@ spec:
           remediationAction: inform
           severity: high
           object-templates:
+            # This is the GitOps Managed Namespace
+            # It is the Namespace that is created in the Managed Cluster
             - complianceType: musthave
               objectDefinition:
                 apiVersion: v1
@@ -43,7 +45,8 @@ spec:
           remediationAction: inform
           severity: high
           object-templates:
-            # This is the GitOps Hub Instance
+            # This is the GitOps Managed Instance
+            # It is the ArgoCD Instance that is installed in the Managed Cluster
             - complianceType: musthave
               objectDefinition:
                 apiVersion: argoproj.io/v1beta1
@@ -193,6 +196,9 @@ spec:
           remediationAction: inform
           severity: high
           object-templates:
+            # This is the OpenShift GitOps Instance Role Binding
+            # It is a cluster-admin role binding required to allow 
+            # the ArgoCD Application Controller to manage the cluster
             - complianceType: musthave
               objectDefinition:
                 kind: ClusterRoleBinding
@@ -220,6 +226,8 @@ spec:
           severity: high
           object-templates:
             # This is the OpenShift GitOps Instance Link
+            # It is the ConsoleLink that is created in the Managed Cluster
+            # It allows users to access the ArgoCD UI from the OpenShift Console
             - complianceType: musthave
               objectDefinition:
                 apiVersion: console.openshift.io/v1

@@ -15,6 +15,7 @@ spec:
     metadata:
       annotations:
         # Managed Cluster and namespace where the application will be deployed
+        # This annotation is used by the OCM to pull the application to the managed cluster
         apps.open-cluster-management.io/ocm-managed-cluster: '{{name}}'
         apps.open-cluster-management.io/ocm-managed-cluster-app-namespace: gitops-managed
         # Skip reconciliation of the application in the HUB Cluster
@@ -24,8 +25,10 @@ spec:
       name: '{{name}}-petclinic-app'
     spec:
       destination:
-        namespace: petclinic
+        # The destination cluster and namespace where the application will be deployed
+        # As the application is deployed by the managed cluster, the destination is set to local kubernetes address
         server: https://kubernetes.default.svc
+        namespace: petclinic
       project: default
       source:
         path: 02-sample/petclinic

@@ -21,6 +21,8 @@ spec:
           remediationAction: inform
           severity: high
           object-templates:
+            # Create a namespace for the OpenShift GitOps Operator
+            # This namespace is required for the operator to function correctly.
             - complianceType: musthave
               objectDefinition:
                 apiVersion: v1
@@ -30,6 +32,8 @@ spec:
                   labels:
                     openshift.io/cluster-monitoring: "true"  
     - objectDefinition:
+        # Create an OperatorPolicy to ensure the OpenShift GitOps Operator is installed
+        # This policy ensures that the operator is present in the cluster.
         apiVersion: policy.open-cluster-management.io/v1beta1
         kind: OperatorPolicy
         metadata:
@@ -49,8 +53,11 @@ spec:
             sourceNamespace: openshift-marketplace
             config:
               env:
+                # Allows ArgoCD instances at gitops-managed and gitops-hub
+                # to manage cluster scoped resources
                 - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
                   value: gitops-managed, gitops-hub
+                # Disable the default ArgoCD instance creation
                 - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
                   value: 'true'
           upgradeApproval: None
