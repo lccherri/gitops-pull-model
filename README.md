@@ -63,7 +63,7 @@ oc apply -f ./00-rhacm/02-policies -n policies
 - The `policies` namespace is used to organize and manage the GitOps-related policies.
 - The policy definitions in the `./00-rhacm/02-policies` directory include configurations for deploying the OpenShift GitOps operator and setting up ArgoCD instances on the clusters.
 
-For additional details, refer to the comments within the policy source files located in the `./00-rhacm/02-policies` directory.
+> **Note:** For more information, review the inline comments within the policy source files located in the `./00-rhacm/02-policies` directory. These comments provide detailed explanations of each policy's purpose and configuration.
 
 ### Policy Labels Overview
 
