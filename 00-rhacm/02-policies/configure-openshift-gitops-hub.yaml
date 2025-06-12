@@ -46,6 +46,24 @@ spec:
           remediationAction: inform
           severity: high
           object-templates:
+            # Define the AppProject before any application is processed by ArgoCD
+            # due to avoiding synchronization issues
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: argoproj.io/v1alpha1
+                kind: AppProject
+                metadata:
+                  name: default
+                  namespace: gitops-hub
+                spec:
+                  clusterResourceWhitelist:
+                  - group: '*'
+                    kind: '*'
+                  destinations:
+                  - namespace: '*'
+                    server: '*'
+                  sourceRepos:
+                  - '*'
             # This is the GitOps Hub Instance
             # It is the ArgoCD Instance that is created in the Hub Cluster
             - complianceType: musthave
@@ -215,6 +233,14 @@ spec:
                       operator: Exists
                     - key: cluster.open-cluster-management.io/unavailable
                       operator: Exists
+                  # Only clusters with the label gitops-managed will be selected
+                  # This is used to select the clusters that are managed by the GitOps Hub Cluster
+                  predicates:
+                    - requiredClusterSelector:
+                        labelSelector:
+                          matchExpressions:
+                            - key: gitops-managed
+                              operator: Exists
             # This is the GitOpsCluster
             # It enables the GitOps Hub Cluster to manage other clusters using ACM
             - complianceType: musthave

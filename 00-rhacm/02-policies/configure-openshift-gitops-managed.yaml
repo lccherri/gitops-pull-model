@@ -46,6 +46,24 @@ spec:
           remediationAction: inform
           severity: high
           object-templates:
+            # Define the AppProject before any application is processed by ArgoCD
+            # due to avoiding synchronization issues
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: argoproj.io/v1alpha1
+                kind: AppProject
+                metadata:
+                  name: default
+                  namespace: gitops-managed
+                spec:
+                  clusterResourceWhitelist:
+                  - group: '*'
+                    kind: '*'
+                  destinations:
+                  - namespace: '*'
+                    server: '*'
+                  sourceRepos:
+                  - '*'
             # This is the GitOps Managed Instance
             # It is the ArgoCD Instance that is installed in the Managed Cluster
             - complianceType: musthave
