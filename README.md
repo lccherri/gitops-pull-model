@@ -30,6 +30,20 @@ Access the OpenShift console and navigate to **Installed Operators > Advanced Cl
 
 ![MultiClusterHub Status](99-assets/multiclusterhubs.png)
 
+### Environment
+
+This sample demonstrates the GitOps Pull Model using two OpenShift clusters to highlight the key differences between the Hub Cluster and Managed Clusters.
+
+The diagram below illustrates the clusters imported into the environment:
+
+![Clusters Imported to Environment](99-assets/clusters.png)
+
+- **local-cluster**: Serves as the Hub Cluster, which is self-managed by RHACM and acts as the central control plane.
+- **cluster-9xrd6**: Represents a Managed Cluster configured to receive application deployments from the Hub.
+- You can import additional Managed Clusters as needed to expand and test this sample environment.
+
+This setup allows you to observe how configurations and workloads are distributed and managed across both Hub and Managed Clusters.
+
 ## Configuring Groups and Permissions
 
 **If you are not using the `kubeadmin` user**, you need to create a `gitops-admin` group and add your current user to it to ensure administrative access to the ArgoCD instances provisioned on each OpenShift cluster. Execute the following commands:
